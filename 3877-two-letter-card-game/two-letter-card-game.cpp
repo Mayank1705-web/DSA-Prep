@@ -1,43 +1,40 @@
 class Solution {
 public:
-    int solve(vector<int> &cnt) {
-        int total = 0, mx = 0;
-        for (int x : cnt) {
-            total += x;
-            mx = max(mx, x);
-        }
-        return min(total / 2, total - mx);
-    }
-
     int score(vector<string>& cards, char x) {
-        vector<int> first(10, 0), second(10, 0);
-        int both = 0;
+        int a = 0;
+        vector<int> cntB(10, 0);
+        vector<int> cntC(10, 0); 
 
-        for (auto &card : cards) {
-            if (card[0] == x && card[1] == x) {
-                both++;
-            }
-            else if (card[0] == x) {
-                first[card[1] - 'a']++;
-            }
-            else if (card[1] == x) {
-                second[card[0] - 'a']++;
+        for (const string& card : cards) {
+            bool has0 = (card[0] == x);
+            bool has1 = (card[1] == x);
+            if (has0 && has1) {
+                a++;
+            } else if (has0) {
+                cntB[card[1] - 'a']++;
+            } else if (has1) {
+                cntC[card[0] - 'a']++;
             }
         }
 
-        int ans = 0;
-
-        // Try assigning 'both' cards to either group
-        for (int k = 0; k <= both; k++) {
-            vector<int> A = first;
-            vector<int> B = second;
-
-            A[x - 'a'] += k;
-            B[x - 'a'] += (both - k);
-
-            ans = max(ans, solve(A) + solve(B));
+        auto solveGroup = [](vector<int>& cnt, int& leftover) -> int {
+        int N = 0, mx = 0;
+        for (int c : cnt) {
+            N += c;
+            mx = max(mx, c);
         }
+        int M = min(N / 2, N - mx);
+        leftover = N - 2 * M;
+        return M;
+    };
+    int leftoverB = 0, leftoverC = 0;
+    int matchB = solveGroup(cntB, leftoverB);
+    int matchC = solveGroup(cntC, leftoverC);
 
-        return ans;
+    int extra = min(a, leftoverB + leftoverC);    
+    int remainingA = a - extra;
+    int bonus = min(remainingA / 2, matchB + matchC); 
+
+    return matchB + matchC + extra + bonus;
     }
 };
