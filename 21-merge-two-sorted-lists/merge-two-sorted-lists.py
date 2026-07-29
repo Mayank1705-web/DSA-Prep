@@ -18,10 +18,7 @@ class Solution(object):
             
             current = current.next
         
-        if list1:
-            current.next = list1
-        else:
-            current.next = list2
+        current.next = list1 or list2
         
         return dummy.next
         
