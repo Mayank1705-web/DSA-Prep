@@ -1,11 +1,14 @@
 class Solution(object):
-    def removeElement(self, arr, val):
-        j = 0
-        for i in range(len(arr)):
-            if arr[i] != val:
-                arr[i], arr[j] = arr[j], arr[i]
-                j += 1
-        return j
-
-
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        k = 0
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[i], nums[k] = nums[k], nums[i]
+                k += 1
         
+        return k
